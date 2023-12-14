@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 RFID_TAG_ID = -1;
+ACCESS_CODE = 123456789097654321
 
 @csrf_exempt
 def index(request):
@@ -22,9 +23,21 @@ def attendance_history(request):
     return render(request, 'attendance_history.html', {'attendance_history': []})
 
 
+def set_rfid(request, access_code, tag_id):
+    global RFID_TAG_ID
+    print(request, access_code, tag_id, type(tag_id));
+    if (request.method == 'GET' and access_code == ACCESS_CODE ):
+        RFID_TAG_ID = tag_id
+        print("[RFID TAG ID - UPDATE]::: ", RFID_TAG_ID)
+        return JsonResponse({
+            'status': 'success',
+        })
+
+
 @csrf_exempt
 def enroll_rfid(request):
     if (request.method == 'POST'):
+        print(request)
         return JsonResponse({
             'status': 'true' if RFID_TAG_ID != -1 else 'false' ,
             'tag_id': RFID_TAG_ID
