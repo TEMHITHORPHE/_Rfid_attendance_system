@@ -6,8 +6,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 
 
-from .forms import StudentForm, LecturerLoginForm
-from .models import Student, Attendance, Lecturer
+from .forms import StudentForm
+# from .models import Student, Attendance, Lecturer
 
 
 
@@ -80,17 +80,19 @@ def enroll_student(request):
 
 def lecturer_login(request):
     if request.method == 'POST':
-        form = LecturerLoginForm(request, data=request.POST)
+        form = AuthenticationForm(request, request.POST)
         if form.is_valid():
-            lecturer_id = form.cleaned_data['lecturer_id']
+            username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = authenticate(request, lecturer_id=lecturer_id, password=password)
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('dashboard')  # Redirect to lecturer's dashboard or any desired page
+                # Redirect to a success page or homepage after login
+                return redirect('dashboard.html')  # Change 'home' to your desired URL name
     else:
-        form = LecturerLoginForm()
+        form = AuthenticationForm()
     return render(request, 'lecturer_login.html', {'form': form})
+
 
 
 

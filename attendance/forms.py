@@ -1,6 +1,7 @@
 # forms.py
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login
 
 
 from .models import Student, Lecturer
@@ -12,9 +13,7 @@ class StudentForm(forms.ModelForm):
 
 
 
-class LecturerLoginForm(AuthenticationForm):
-    lecturer_id = forms.CharField(max_length=20)  # Add lecturer_id field
-
+class LecturerForm(forms.ModelForm):
     class Meta:
         model = Lecturer
-        fields = ('lecturer_id', 'password')
+        fields = ['staff_id']
