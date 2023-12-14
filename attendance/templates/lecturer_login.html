@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lecturer Login</title>
+    <!-- Include Bootstrap or any other CSS frameworks/styles -->
+    <!-- For example: -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        /* Add custom styles here */
+        /* For example: */
+        .login-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            margin-top: 50px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container login-container">
+        <h2>Lecturer Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.lecturer_id }}
+            {{ form.password }}
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+    <!-- Include Bootstrap or any other JS frameworks/scripts -->
+    <!-- For example: -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

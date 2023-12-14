@@ -1,9 +1,13 @@
 # views.py
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .models import Student, Attendance
-from .forms import StudentForm
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
+
+
+from .forms import StudentForm, LecturerLoginForm
+from .models import Student, Attendance, Lecturer
 
 
 
@@ -73,11 +77,20 @@ def enroll_student(request):
 
 
 
-def login(request):
+
+def lecturer_login(request):
     if request.method == 'POST':
-        # TODO: Implement login/authentication logic
-        return render(request, 'dashboard.html', {'attendance_records': []})
-    return render(request, 'login.html')
+        form = LecturerLoginForm(request, data=request.POST)
+        if form.is_valid():
+            lecturer_id = form.cleaned_data['lecturer_id']
+            password = form.cleaned_data['password']
+            user = authenticate(request, lecturer_id=lecturer_id, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('dashboard')  # Redirect to lecturer's dashboard or any desired page
+    else:
+        form = LecturerLoginForm()
+    return render(request, 'lecturer_login.html', {'form': form})
 
 
 

@@ -1,5 +1,8 @@
 # models.py
 from django.db import models
+from django.contrib.auth.models import AbstractUser, Group, Permission
+
+
 
 class Student(models.Model):
     first_name = models.CharField(max_length=30)
@@ -19,3 +22,16 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f'{self.student.first_name} {self.student.last_name} - {self.date}'
+
+
+
+class Lecturer(AbstractUser):
+    lecturer_id = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=100)
+
+     # Specify unique related names for groups and user_permissions
+    groups = models.ManyToManyField(Group, related_name='lecturer_groups')
+    user_permissions = models.ManyToManyField(Permission, related_name='lecturer_permissions')
+
+    def __str__(self):
+        return self.name
