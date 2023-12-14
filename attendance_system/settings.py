@@ -127,6 +127,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTHENTICATION_BACKENDS = [
-    'attendance.backends.LecturerIDBackend',
     'django.contrib.auth.backends.ModelBackend',  # Add the default backend
 ]
