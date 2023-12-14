@@ -15,7 +15,6 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('enroll/', views.enroll_student, name='enroll_student'),
-    path('login/', views.login, name='login'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('mark_attendance/<str:method>/', views.mark_attendance, name='mark_attendance'),
     path('attendance_history/', views.attendance_history, name='attendance_history'),
@@ -23,5 +22,6 @@ urlpatterns = [
     path('validate_rfid/', views.validate_rfid, name='validate_rfid'),
     path('set/rfid/<int:access_code>/<str:tag_id>', views.set_rfid, name='set_rfid'),
     path('lecturer/login/', views.lecturer_login, name='lecturer_login'),
+    # path('login/', views.login, name='login'),
 
 ]

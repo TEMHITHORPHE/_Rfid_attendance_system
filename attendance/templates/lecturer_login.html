@@ -26,22 +26,21 @@
         <h2>Lecturer Login</h2>
         <form method="post">
             {% csrf_token %}
-            <!-- {{ form.lecturer_id }} -->
+
             <div class="form-group">
                 <label for="lecturer_id">Lecturer ID:</label>
-                <input type="text" class="form-control" id="lecturer_id" name="lecturer_id" required>
+                <input type="text" class="form-control" id="lecturer_id" name="username" required>
             </div>
 
-            <!-- {{ form.password }} -->
-            {% csrf_token %}
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <center>
 
+            <center>
                 <button type="submit" class="btn btn-primary">Login</button>
             </center>
+
         </form>
     </div>
     <!-- Include Bootstrap or any other JS frameworks/scripts -->
