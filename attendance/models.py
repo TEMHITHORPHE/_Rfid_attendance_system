@@ -33,5 +33,10 @@ class Lecturer(AbstractUser):
     groups = models.ManyToManyField(Group, related_name='lecturer_groups')
     user_permissions = models.ManyToManyField(Permission, related_name='lecturer_permissions')
 
+
+    class Meta:
+        verbose_name = 'Lecturer'
+        verbose_name_plural = 'Lecturers'
+
     def __str__(self):
         return self.name
