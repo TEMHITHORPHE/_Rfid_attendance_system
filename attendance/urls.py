@@ -21,6 +21,6 @@ urlpatterns = [
     path('attendance_history/', views.attendance_history, name='attendance_history'),
     path('enroll_rfid/', enroll_rfid, name='enroll_rfid'),
     path('validate_rfid/', validate_rfid, name='validate_rfid'),
-    path('set/rfid/<int:access_code>/<int:tag_id>', set_rfid, name='set_rfid'),
+    path('set/rfid/<int:access_code>/<str:tag_id>', set_rfid, name='set_rfid'),
 
 ]
