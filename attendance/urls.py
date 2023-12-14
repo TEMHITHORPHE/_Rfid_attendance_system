@@ -10,7 +10,7 @@ urlpatterns = [
  
 from django.urls import path
 from . import views
-from .views import validate_rfid
+from .views import validate_rfid, enroll_rfid
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -19,5 +19,6 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('mark_attendance/<str:method>/', views.mark_attendance, name='mark_attendance'),
     path('attendance_history/', views.attendance_history, name='attendance_history'),
+    path('enroll_rfid/', enroll_rfid, name='enroll_rfid'),
     path('validate_rfid/', validate_rfid, name='validate_rfid'),
 ]

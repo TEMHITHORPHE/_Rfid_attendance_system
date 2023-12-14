@@ -5,6 +5,10 @@ from .models import Student, Attendance
 from .forms import StudentForm
 from django.views.decorators.csrf import csrf_exempt
 
+
+
+RFID_TAG_ID = -1;
+
 @csrf_exempt
 def index(request):
     return render(request, 'index.html')
@@ -16,6 +20,16 @@ def index(request):
 def attendance_history(request):
     # TODO: Implement logic to retrieve and display attendance history
     return render(request, 'attendance_history.html', {'attendance_history': []})
+
+
+@csrf_exempt
+def enroll_rfid(request):
+    if (request.method == 'POST'):
+        return JsonResponse({
+            'status': 'true' if RFID_TAG_ID != -1 else 'false' ,
+            'tag_id': RFID_TAG_ID
+            })
+
 
 def validate_rfid(request):
     if request.method == 'POST':
@@ -32,6 +46,8 @@ def validate_rfid(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
+
+
 def enroll_student(request):
     if request.method == 'POST':
         form = StudentForm(request.POST)
@@ -42,16 +58,22 @@ def enroll_student(request):
         form = StudentForm()
     return render(request, 'enroll.html', {'form': form})
 
+
+
 def login(request):
     if request.method == 'POST':
         # TODO: Implement login/authentication logic
         return render(request, 'dashboard.html', {'attendance_records': []})
     return render(request, 'login.html')
 
+
+
 def dashboard(request):
     # TODO: Retrieve attendance records for the logged-in student
     # ...
     return render(request, 'dashboard.html', {'attendance_records': []})
+
+
 
 def mark_attendance(request, method):
     if method == 'fingerprint':
