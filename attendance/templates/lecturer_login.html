@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Lecturer Login</title>
@@ -19,14 +20,28 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="container login-container">
+    <div class="container login-container mt-5">
         <h2>Lecturer Login</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.lecturer_id }}
-            {{ form.password }}
-            <button type="submit" class="btn btn-primary">Login</button>
+            <!-- {{ form.lecturer_id }} -->
+            <div class="form-group">
+                <label for="lecturer_id">Lecturer ID:</label>
+                <input type="text" class="form-control" id="lecturer_id" name="lecturer_id" required>
+            </div>
+
+            <!-- {{ form.password }} -->
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <center>
+
+                <button type="submit" class="btn btn-primary">Login</button>
+            </center>
         </form>
     </div>
     <!-- Include Bootstrap or any other JS frameworks/scripts -->
@@ -34,4 +49,5 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
+
 </html>
