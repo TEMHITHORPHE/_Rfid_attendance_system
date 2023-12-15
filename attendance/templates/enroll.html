@@ -12,32 +12,32 @@
     <div class="container mt-5">
         <h1>Enroll as a Student</h1>
         <form method="post">
+
             {% csrf_token %}
             <div class="form-group">
                 <label for="first_name">First Name</label>
                 <input type="text" class="form-control" id="first_name" name="first_name" required>
             </div>
+
             <div class="form-group">
                 <label for="last_name">Last Name</label>
                 <input type="text" class="form-control" id="last_name" name="last_name" required>
             </div>
-            <!-- <div class="form-group">
-                <label for="date_of_birth">Date of Birth</label>
-                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
-            </div> -->
+
             <div class="form-group">
                 <label for="student_id">Student ID (Matric No)</label>
                 <input type="text" class="form-control" id="student_id" name="student_id" required>
             </div>
+
             <div class="form-group">
                 <label for="fingerprint_id">Fingerprint ID</label>
                 <input type="text" class="form-control" id="fingerprint_id" name="fingerprint_id" required>
             </div>
+
             <div class="form-group">
                 <label style="display: block;" for="rfid_id">RFID ID</label>
-                <input style="width: 20%; display: inline-block;" type="text" class="form-control" id="rfid_id"
-                    name="rfid_id" required disabled>
-                <button type="button" class="btn btn-primary" onclick="retrieveRFID()">Get Rfid</button>
+                <input style="width: 20%; display: inline-block;" type="text" class="form-control" id="rfid_id" name="rfid_id" required readonly>
+                <button type="menu" class="btn btn-primary" onclick="retrieveRFID()">Get Rfid</button>
 
             </div>
             <button type="submit" class="btn btn-primary">Enroll</button>
@@ -45,15 +45,44 @@
 
     </div>
 
-    <div id="error" style="position: fixed; top: 20px; right: 1%; opacity: 0%;" class="alert alert-danger alert-dismissible fade show"
-        role="alert">
+    <div id="error" style="position: fixed; top: 20px; right: 1%; opacity: 0%;"
+        class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Oh! snap! ... could not retrieve RFID TAG ID ... try again.</strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="dismissError()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 
+
+
+    <!-- Notification Prompts Below  -->
+
+    {% if student.enrolled %}
+
+    <div id="post-error" style="position: fixed; top: 20px; right: 1%; opacity: 80%;"
+        class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Yay! ... Successfully enrolled {{ student.name }} </strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="() => document.getElementById('post-error').remove()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    {% elif student.enrolled == False %}
+
+    <div id="post-error" style="position: fixed; top: 20px; right: 1%; opacity: 80%;"
+        class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Oops! ... could not enroll student ... try again. </strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="() => document.getElementById('post-error').remove()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    {% endif %}
+
+
+
     <script>
+
         async function retrieveRFID() {
             const res = await (await fetch('/enroll_rfid/', { method: 'post' })).json();
             console.log(res);
@@ -70,7 +99,7 @@
         function showError(params) {
             document.getElementById('error').style.opacity = '80%';
         }
-        
+
         function dismissError(params) {
             document.getElementById('error').style.opacity = '0%';
         }

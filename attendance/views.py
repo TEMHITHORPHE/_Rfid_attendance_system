@@ -18,8 +18,6 @@ ACCESS_CODE = 1234
 def index(request):
     return render(request, 'index.html')
 
-@csrf_exempt
-
 
 
 def attendance_history(request):
@@ -70,7 +68,8 @@ def enroll_student(request):
         form = StudentForm(request.POST)
         if form.is_valid():
             form.save()
-            return render(request, 'dashboard.html', {'attendance_records': []})
+            return render(request, 'enroll.html', {'student': { 'enrolled': True, 'name': request.POST['first_name'] } })
+        return render(request, 'enroll.html', {'student': { 'enrolled': False } })
     else:
         form = StudentForm()
     return render(request, 'enroll.html', {'form': form})
