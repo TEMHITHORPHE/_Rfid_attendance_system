@@ -12,7 +12,7 @@ from .models import Student, Attendance
 
 
 RFID_TAG_ID = -1;
-ACCESS_CODE = 123456789097654321
+ACCESS_CODE = 1234
 
 @csrf_exempt
 def index(request):
