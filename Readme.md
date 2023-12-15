@@ -12,7 +12,10 @@
 [+] Run `python manage.py migrate`
 
 [Step 5]
-[+] Open Django Admin Page and create a USER (Lecturer).
+[+] Run `python manage.py createsuperuser` to create an Admin Super User.
 
 [Step 6]
+[+] Login to Django Admin Page using credentials from previous step & create a normal USER (Not a staff).
+
+[Step 7]
 [+] Have fun!!!.
