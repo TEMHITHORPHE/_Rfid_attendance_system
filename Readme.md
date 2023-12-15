@@ -3,7 +3,7 @@
 [+] Activate python virtual environment
 
 [STEP 2]
-[+] Run `pip install requirements.txt` in terminal
+[+] Run `pip install -r requirements.txt` in terminal
 
 [Step 3]
 [+] Run `python manage.py makemigrations`
