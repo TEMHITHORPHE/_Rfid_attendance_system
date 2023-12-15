@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container mt-5">
-        <h1>Welcome to Your Dashboard</h1>
-        <h3>Your Attendance Records</h3>
+        <section class="d-flex justify-content-between">
+            <h1>Welcome to Your Dashboard</h1>
+            <button type="button" class="btn btn-primary btn-lg">Take New Attendance</button>
+        </section>
+        <h3>Student Attendance Records</h3>
         <table class="table">
             <thead>
                 <tr>
@@ -19,13 +24,15 @@
             </thead>
             <tbody>
                 {% for record in attendance_records %}
-                    <tr>
-                        <td>{{ record.date }}</td>
-                        <td>{{ record.status }}</td>
-                    </tr>
+                <tr>
+                    <td>{{ record.date }}</td>
+                    <td>{{ record.status }}</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
+
     </div>
 </body>
+
 </html>
