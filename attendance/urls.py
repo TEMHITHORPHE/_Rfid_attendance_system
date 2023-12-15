@@ -22,6 +22,4 @@ urlpatterns = [
     path('validate_rfid/', views.validate_rfid, name='validate_rfid'),
     path('set/rfid/<int:access_code>/<str:tag_id>', views.set_rfid, name='set_rfid'),
     path('lecturer/login/', views.lecturer_login, name='lecturer_login'),
-    # path('login/', views.login, name='login'),
-
 ]
