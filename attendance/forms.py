@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
 
 
-from .models import Student, Lecturer
+from .models import Student
 
 class StudentForm(forms.ModelForm):
     class Meta:
@@ -13,7 +13,7 @@ class StudentForm(forms.ModelForm):
 
 
 
-class LecturerForm(forms.ModelForm):
-    class Meta:
-        model = Lecturer
-        fields = ['staff_id']
+# class LecturerForm(forms.ModelForm):
+#     class Meta:
+#         model = Lecturer
+#         fields = ['staff_id']

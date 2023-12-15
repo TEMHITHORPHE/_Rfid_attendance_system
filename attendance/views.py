@@ -1,13 +1,13 @@
 # views.py
-from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.contrib.auth.decorators import login_required
 
 from .forms import StudentForm
-# from .models import Student, Attendance, Lecturer
+from .models import Student, Attendance
 
 
 
@@ -87,15 +87,18 @@ def lecturer_login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+
                 # Redirect to a success page or homepage after login
-                return redirect('dashboard.html')  # Change 'home' to your desired URL name
+                return redirect('/dashboard')
+            else:
+                return render(request, 'lecturer_login.html', {'login_error': True})
     else:
         form = AuthenticationForm()
     return render(request, 'lecturer_login.html', {'form': form})
 
 
 
-
+@login_required(login_url='lecturer_login')
 def dashboard(request):
     # TODO: Retrieve attendance records for the logged-in student
     # ...
