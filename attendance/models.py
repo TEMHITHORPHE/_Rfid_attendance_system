@@ -1,5 +1,6 @@
 # models.py
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Student(models.Model):
@@ -14,18 +15,18 @@ class Student(models.Model):
 
 
 
-class Lecturer(models.Model):
-    id = models.AutoField(primary_key=True)
-    staff_id = models.CharField(max_length=12, unique=True)
+# class Lecturer(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     staff_id = models.CharField(max_length=12, unique=True)
 
 
 class Attendance(models.Model):
     course_title = models.CharField(max_length=50, blank=False)
     course_code = models.CharField(max_length=7, blank=False)
     student = models.ForeignKey(Student, on_delete=models.PROTECT, blank=False)
-    lecturer = models.ForeignKey(Lecturer, on_delete=models.PROTECT, blank=False)
+    lecturer = models.ForeignKey(User, on_delete=models.PROTECT, blank=False)
     date = models.DateTimeField(auto_now_add=True, blank=False)
-    status = models.CharField(choices={'lecture': 'Lecture', 'exam': 'Exam', 'test': 'Test'}, max_length=10, blank=False)
+    status = models.CharField(choices=[('lecture', 'Lecture'), ('exam', 'Exam'), ('test', 'Test')], max_length=10, blank=False)
 
 
 
