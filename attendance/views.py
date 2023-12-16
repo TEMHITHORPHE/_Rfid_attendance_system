@@ -6,8 +6,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth.models import User
 from .forms import StudentForm
-from .models import Student, Attendance
+from .models import Student, Attendance, AttendanceConfig
+
 
 
 
@@ -20,9 +22,9 @@ def index(request):
 
 
 
-def attendance_history(request):
-    # TODO: Implement logic to retrieve and display attendance history
-    return render(request, 'attendance_history.html', {'attendance_history': []})
+# def attendance_history(request):
+#     # TODO: Implement logic to retrieve and display attendance history
+#     return render(request, 'attendance_history.html', {'attendance_history': []})
 
 
 def set_rfid(request, access_code, tag_id):
@@ -87,7 +89,7 @@ def lecturer_login(request):
             if user is not None:
                 login(request, user)
 
-                # Redirect to a success page or homepage after login
+                # Redirect to dashboard after login
                 return redirect('/dashboard')
             else:
                 return render(request, 'lecturer_login.html', {'login_error': True})
@@ -99,9 +101,32 @@ def lecturer_login(request):
 
 @login_required(login_url='lecturer_login')
 def dashboard(request):
-    # TODO: Retrieve attendance records for the logged-in student
-    # ...
-    return render(request, 'dashboard.html', {'attendance_records': []})
+    if (not request.user.is_authenticated):
+        return redirect('/lecturer/login/');
+
+    user = request.user  # This will return current authenticated user
+    lecturer = User.objects.get(id=user.id)
+
+    # {'live_attendance': True, 'attendance_id': 33, 'status': 'lecture'}
+    # Retrieve AttendanceConfig for the lecturer
+    # attendance_config = AttendanceConfig.objects.get(lecturer=lecturer)
+    attendance_config = {'config': {}}
+
+    # Query all attendances related to the specified lecturer
+    lecturer_attendances = Attendance.objects.filter(lecturer=lecturer)
+
+    return render(request, 'dashboard.html', {'config': attendance_config.get('config'), 'attendances': lecturer_attendances})
+
+
+@login_required(login_url='lecturer_login')
+def start_new_attendance():
+    pass
+
+
+
+@login_required(login_url='lecturer_login')
+def live_attendance(request):
+    return render(request, 'live_attendance.html')
 
 
 

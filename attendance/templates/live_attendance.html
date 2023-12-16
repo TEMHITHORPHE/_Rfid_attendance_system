@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <style>
+    </style>
+</head>
+
+<body>
+    {% include "navbar.html" %}
+
+    <div class="container mt-5">
+        <section class="d-flex flex-wrap justify-content-center justify-content-lg-between">
+            <h1 class="text-center text-lg-center">Live Attendance View </h1>
+            <!-- <button type="button" class="btn btn-primary btn-lg">Take New Attendance</button> -->
+        </section>
+        <center class="my-4">
+            <h3>Live Student Attendance Records</h3>
+        </center>
+    </div>
+
+    <div class="container mt-5">
+        <center>
+            
+        </center>
+    </div>
+
+    {% include "footer.html" %}
+
+    <script>
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('show')) {
+                el.classList.remove('show');
+                el.previousElementSibling.classList.remove('opened')
+            }
+            else {
+                el.classList.add('show');
+                el.previousElementSibling.classList.add('opened')
+            }
+        }
+    </script>
+</body>
+
+</html>

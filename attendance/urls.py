@@ -12,14 +12,17 @@ from django.urls import path
 from . import views
 # from .views import validate_rfid, enroll_rfid, set_rfid, 
 
+app_name = 'attendance'
+
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('enroll/', views.enroll_student, name='enroll_student'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('mark_attendance/<str:method>/', views.mark_attendance, name='mark_attendance'),
-    path('attendance_history/', views.attendance_history, name='attendance_history'),
+    path('mark_attendance/', views.mark_attendance, name='mark_attendance'),
     path('enroll_rfid/', views.enroll_rfid, name='enroll_rfid'),
     path('validate_rfid/', views.validate_rfid, name='validate_rfid'),
     path('set/rfid/<int:access_code>/<str:tag_id>', views.set_rfid, name='set_rfid'),
     path('lecturer/login/', views.lecturer_login, name='lecturer_login'),
+    path('lecturer/attendance/live/', views.live_attendance, name='live_attendance')
 ]
