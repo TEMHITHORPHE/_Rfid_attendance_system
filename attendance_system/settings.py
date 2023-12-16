@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_browser_reload',    # django-browser-reload
+    # 'django_watchfiles',    #django-watchfiles (Doesn't allow "django-browser-reload with" to function as intended)
     'attendance',
 ]
 
@@ -48,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware'  # django-browser-reload
 ]
 
 ROOT_URLCONF = 'attendance_system.urls'
