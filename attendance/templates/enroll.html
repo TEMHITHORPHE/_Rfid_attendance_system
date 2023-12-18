@@ -92,7 +92,7 @@
     <script>
 
         async function retrieveRFID() {
-            const res = await (await fetch('/enroll_rfid/', { method: 'post' })).json();
+            const res = await (await fetch('/retrieve/rfid/', { method: 'post' })).json();
             console.log(res);
             if (res.status === 'false') {
                 showError();
