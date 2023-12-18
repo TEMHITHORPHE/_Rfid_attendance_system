@@ -44,7 +44,6 @@
             {% if config.live_attendance %}
             <a type="button" class="btn btn-danger d-flex align-items-center" style="padding: 0.5rem 1rem; font-size: 1.25rem;" href="{% url 'attendance:live_attendance' %}">Ongoing Attendance (Live)</a>
             {% else %}
-            <!-- <a type="button" class="btn btn-danger d-flex align-items-center" style="padding: 0.5rem 1rem; font-size: 1.25rem;" href="{% url 'attendance:live_attendance' %}">Ongoing Attendance (Live)</a> -->
             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#take-attendance" data-whatever="@Student Attendance">Take New Attendance</button>
             {% endif %}
         </section>
@@ -146,18 +145,18 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form method="post" action="/dashboard/" name="create_attendance">
               <div class="form-group">
                 <label for="recipient-name" class="col-form-label">Course Title:</label>
-                <input type="text" class="form-control" id="course_title" name="course_title" />
+                <input type="text" class="form-control" id="course_title" name="course_title" required/>
               </div>
               <div class="form-group">
                 <label for="message-text" class="col-form-label">Course Code:</label>
-                <input type="text" class="form-control" id="course_code" name="course_code" />
+                <input type="text" class="form-control" id="course_code" name="course_code" required/>
               </div>
               <div class="form-group">
                 <label for="message-text" class="col-form-label">Attendance Type:</label>
-                <select class="form-control" id="status" name="status">
+                <select class="form-control" id="status" name="status" required>
                   <option value="lecture">Lecture</option>
                   <option value="test">Test</option>
                   <option value="exam">Exam</option>
@@ -167,7 +166,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Start Attendance</button>
+            <button formaction="" type="submit" class="btn btn-primary" onclick="(() => document.forms['create_attendance'].submit())()">Start Attendance</button>
           </div>
         </div>
       </div>
