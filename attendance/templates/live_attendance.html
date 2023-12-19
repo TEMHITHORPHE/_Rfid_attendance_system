@@ -17,6 +17,7 @@
     <div class="container mt-5">
         <section class="d-flex flex-wrap justify-content-center justify-content-lg-between">
             <h1 class="text-center text-lg-center">Live Attendance View </h1>
+            <button type="button" class="btn btn-danger d-flex align-items-center" data-toggle="modal" data-target="#end-attendance"> End Attendance Session (Live) </button>
             <!-- <button type="button" class="btn btn-primary btn-lg">Take New Attendance</button> -->
         </section>
         <center class="my-4">
@@ -43,9 +44,9 @@
                         <td>Test</td>
                         <td>m1623394</td>
                     </tr>
-                    {% for index, student in enumerate(attendance) %}
+                    {% for student in attendance %}
                     <tr>
-                        <th scope="row">{{ index + 2}}</th>
+                        <th scope="row">{{ forloop.counter|add:1 }}</th>
                         <td>{{ student.first_name}}</td>
                         <td>{{ student.last_name}}</td>
                         <td>{{ student.student_id}}</td>
@@ -54,6 +55,35 @@
                 </tbody>
             </table>
         </center>
+    </div>
+
+
+    <!-- Button trigger modal -->
+    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#end-attendance">
+        Launch demo modal
+    </button> -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="end-attendance" tabindex="-1" role="dialog" aria-labelledby="end-attendanceLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="end-attendanceLabel">End Live Attendance Session</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are You Sure You Want To End The Current Attendance Session ?
+                </div>
+                <div class="modal-footer">
+                    <form action="" method="post">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" onclick="">End</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     {% include "footer.html" %}
@@ -65,8 +95,9 @@
         setInterval(fetchLatestRecords, 5000);
 
         async function fetchLatestRecords() {
+            const row_count = tbody.childElementCount - 1;
 
-            const res = await (await fetch('/retrieve/live/attendance/', {
+            const res = await (await fetch('/retrieve/live/attendance/' + row_count, {
                 method: 'POST',
                 credentials: 'include', // Include cookies
             })).json();
@@ -76,27 +107,27 @@
                 return;
             }
 
-            console.log("[Error]: ", res);
+            console.log("[Error]: ", res, row_count);
         }
 
 
         function UpdateAttendanceTable(attendanceList) {
+            console.log("[Attendance Update]: ", attendanceList);
 
             const temp = document.createDocumentFragment();
             const row_count = tbody.childElementCount;
 
             for (let index = 0; index < attendanceList.length; index++) {
-                const attendance = attendanceList[index];
+                const student = attendanceList[index];
                 const trow = `
                         <tr>
-                            <th scope="row">1${ row_count }</th>
-                            <td>Mark</td>
-                            <td>Test</td>
-                            <td>m1623394</td>
+                            <th scope="row">${row_count + index + 1} </th>
+                            <td>Mark ${student.first_name} </td>
+                            <td>Test  ${student.last_name} </td>
+                            <td> ${student.student_id} </td>
                         </tr>`
-                tbody.insertAdjacentHTML("afterbegin")
+                tbody.insertAdjacentHTML("afterbegin", trow);
             }
-            tbody.insertAdjacentElement("afterbegin",)
         }
     </script>
 </body>
