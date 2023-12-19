@@ -1,6 +1,6 @@
 # views.py
 from django.db import transaction
-from django.http import JsonResponse, HttpResponseNotAllowed
+from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse
 from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -16,6 +16,9 @@ from .models import Student, Attendance, AttendanceConfig
 ACCESS_CODE = 1234
 ENROLLMENT_RFID_TAG_ID = -1;
 
+# E -> Enrollment Mode,    A -> Attendance Mode
+RFID_TAG_SUBMISSION_MODE = 'E'
+
 # A hack to get around arduino not knowing anything about the logged in lecturer.
 LIVE_ATTENDANCE_ID = None
 
@@ -23,6 +26,15 @@ LIVE_ATTENDANCE_ID = None
 @csrf_exempt
 def index(request):
     return render(request, 'index.html')
+
+
+
+# Called By Arduino
+def rfid_submission_mode(request, access_code):
+    print("[[[[[[[ CONFIG MODE REQUEST ]]]]]]]]]")
+    if (request.method == 'GET' and access_code == ACCESS_CODE ):
+        return HttpResponse(content=RFID_TAG_SUBMISSION_MODE);
+    return HttpResponseNotAllowed(['GET'])
 
 
 
@@ -37,6 +49,7 @@ def set_rfid(request, access_code, tag_id):
         return JsonResponse({
             'status': 'success',
         })
+    return HttpResponseNotAllowed(['GET'])
 
 
 
@@ -84,13 +97,14 @@ def lecturer_login(request):
     return render(request, 'lecturer_login.html', {'form': form})
 
 
-
-@login_required(login_url='lecturer_login')
+@login_required(login_url=('/lecturer/login/'))
 @transaction.atomic
+@csrf_exempt
 def dashboard(request):
     if (request.method == 'GET'):
         if (not request.user.is_authenticated):
-            return redirect('/lecturer/login/');
+            # return redirect('/lecturer/login/')
+            return redirect(reverse('lecturer_login'))
 
         user = request.user  # This will return current authenticated user
         lecturer = User.objects.get(id=user.id)
@@ -98,13 +112,19 @@ def dashboard(request):
         # Retrieve AttendanceConfig for the lecturer
         attendance_config, created = AttendanceConfig.objects.get_or_create(lecturer=lecturer,  defaults={ 'config': {'live_attendance': False } } )
 
+        if (not created): LIVE_ATTENDANCE_ID = attendance_config.config['attendance_id']
+
         # Query all attendances related to the specified lecturer (descending order, oldest attendance first).
-        attendances = Attendance.objects.filter(lecturer=lecturer).order_by('-date').prefetch_related('student')
+        attendances = Attendance.objects.filter(lecturer=lecturer).order_by('-date').prefetch_related('student').all()
         print("[Student Attendances]: ", attendances )
 
         return render(request, 'dashboard.html', {'config': attendance_config.config, 'attendances': attendances})
     
     elif (request.method == 'POST'):
+        
+        # Get "Attendance" entries with an empty 'student' field and delete them
+        Attendance.objects.filter(student__isnull=True).delete();   # (Ideally, should be a non regular cron job).
+
         # Extract data from the form
         course_title = request.POST.get('course_title')
         course_code = request.POST.get('course_code')
@@ -117,6 +137,7 @@ def dashboard(request):
         attendance = Attendance.objects.create(course_title=course_title, course_code=course_code, status=status, lecturer=lecturer)
         # {'live_attendance': True, 'attendance_id': 33, 'status': 'lecture', 'course_title': Information Systems, 'course_code': CIT513}
 
+
         config_data = {
             'live_attendance': True,  'attendance_id': attendance.id, 'status': status,
             'course_title': course_title, 'course_code': course_code
@@ -127,7 +148,7 @@ def dashboard(request):
         attendance_config.config = config_data;
         attendance_config.save(force_update=True)
     
-        redirect(reverse('live_attendance'))
+        redirect(reverse('attendance:live_attendance'))
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
@@ -135,21 +156,23 @@ def dashboard(request):
 
 @login_required(login_url='lecturer_login')
 def live_attendance(request):
+    global LIVE_ATTENDANCE_ID
 
     if (request.method == 'GET'):
         user = request.user
         lecturer = User.objects.get(id=user.id)
 
         # Retrieve AttendanceConfig for the lecturer
-        attendance_config, _ = AttendanceConfig.objects.get_or_create(lecturer=lecturer,  defaults={ 'config': {'live_attendance': False } } )
+        attendance_config, created = AttendanceConfig.objects.get_or_create(lecturer=lecturer,  defaults={ 'config': {'live_attendance': False } } )
         # {'live_attendance': True, 'attendance_id': 33, 'status': 'lecture', 'course_title': Information Systems, 'course_code': CIT513}
 
+        if (not created): LIVE_ATTENDANCE_ID = attendance_config.config['attendance_id']
+
         # Retrieve current Attendance based on the live attendance id gotten from AttendanceConfig.
-        ongoing_attendance = Attendance.objects.get(lecturer=lecturer, id=attendance_config.config.attendance_id).student.all()
-        print("[Live Attendance]: ", list(ongoing_attendance) )
+        ongoing_attendance = Attendance.objects.get(lecturer=lecturer, id=attendance_config.config['attendance_id']).student.all()
+        print("[Live Attendance]: ", ongoing_attendance )
 
-
-        return render(request, 'live_attendance.html', {'config': attendance_config.config, 'attendance': list(ongoing_attendance) })
+        return render(request, 'live_attendance.html', {'config': attendance_config.config, 'attendance': ongoing_attendance})
     
     elif (request.method == 'POST'):    # Only called to end live/Ongoing attendance.
         user = request.user
@@ -159,14 +182,17 @@ def live_attendance(request):
         attendance_config, created = AttendanceConfig.objects.get_or_create(lecturer=lecturer,  defaults={ 'config': {'live_attendance': False } } )
         # {'live_attendance': True, 'attendance_id': 33, 'status': 'lecture', 'course_title': Information Systems, 'course_code': CIT513}
 
-        if (not created): 
+        if (not created):
             attendance_config.config = {
                 **attendance_config.config,
-                'live_attendance': False
+                'live_attendance': False,
+                'attendance_id': None
             }
-            attendance_config.save();
         
-        redirect(reverse('dashboard'))
+        LIVE_ATTENDANCE_ID = None
+        
+        attendance_config.save();
+        redirect(reverse('attendance:dashboard'))
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
@@ -176,7 +202,7 @@ def live_attendance(request):
 def mark_attendance(request, access_code, tag_id):
 
     if (request.method == 'GET'):
-
+        print("[Marking Attendance]: ", tag_id)
         if (access_code != ACCESS_CODE): return JsonResponse({'status': 'error', 'msg': 'Invalid Acess Code!'})
         if (LIVE_ATTENDANCE_ID == None): return JsonResponse({'status': 'error', 'msg': 'No Live Attendance In Session!!!!'})
 
@@ -201,25 +227,29 @@ def mark_attendance(request, access_code, tag_id):
         except User.DoesNotExist:
             return JsonResponse({'status': 'error', 'msg': 'Strange ... Unknown Lecturer ID!'})
         except Exception as error:
-            print(error)
+            print("[Error Marking Attendance]: ", error)
             return JsonResponse({'status': 'error', 'msg': 'Unexpected! Error! occured!'})
     
     return HttpResponseNotAllowed(['GET'])
 
 
+
 # Ajax Calls Only
 @login_required(login_url='lecturer_login')
 @csrf_exempt
-def retrieve_live_attendance(request):
+def retrieve_live_attendance(request, skip_count):
+    print(LIVE_ATTENDANCE_ID, skip_count)
     try:
         if (request.method == 'POST'):
             attendance = Attendance.objects.get(id=LIVE_ATTENDANCE_ID)
-            print("[Attendance-Ajax]:", attendance)
+            students = list(attendance.student.all().values())[skip_count:]
+            print("[Attendance-Ajax]:", students)
             return JsonResponse({
                 'status': 'success',
-                'attendance': attendance.student.all()
+                'attendance': students
             })
-    except:
+    except Exception as error:
+        print(error)
         return JsonResponse({
                 'status': 'error',
                 'attendance': None
