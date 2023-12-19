@@ -31,4 +31,5 @@ class Attendance(models.Model):
 
 
     def __str__(self):
-        return f'{self.course_code}_{self.student.first_name}_{self.student.last_name}_{self.date}'
+        student = self.student.all()
+        return f'{student}'
