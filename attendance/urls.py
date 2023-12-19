@@ -19,10 +19,11 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('enroll/', views.enroll_student, name='enroll_student'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('submission/mode/rfid/<int:access_code>', views.rfid_submission_mode, name='rfid_submission_mode'),
     path('mark_attendance/rfid/<int:access_code>/<str:tag_id>', views.mark_attendance, name='mark_attendance'),    # Used By Arduino
     path('set/rfid/<int:access_code>/<str:tag_id>', views.set_rfid, name='set_rfid'),   # Used by Arduino.
     path('retrieve/rfid/', views.retrieve_rfid, name='retrieve_rfid'),  # Used during student enrolling (Ajax Calls)
-    path('retrieve/live/attendance/', views.retrieve_live_attendance, name='retrieve_live_attendance'), # (Ajax Calls)
+    path('retrieve/live/attendance/<int:skip_count>', views.retrieve_live_attendance, name='retrieve_live_attendance'), # (Ajax Calls)
     path('lecturer/login/', views.lecturer_login, name='lecturer_login'),
     path('lecturer/attendance/live/', views.live_attendance, name='live_attendance')
 ]
