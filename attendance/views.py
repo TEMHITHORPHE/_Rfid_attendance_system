@@ -4,7 +4,7 @@ from django.db import transaction
 from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse, HttpResponseServerError
 from django.urls import reverse
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.db.models import Count
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import AuthenticationForm
@@ -82,6 +82,25 @@ def enroll_student(request):
     return render(request, 'enroll.html', {'form': form})
 
 
+@csrf_exempt
+@login_required(login_url=('/lecturer/login/'))
+def lecturer_logout(request):
+    try:
+        print("[Log Out Called]")
+        user = request.user  # This will return current authenticated user (since this is a auth protected route).
+        lecturer = User.objects.get(id=user.id) # Can't throw.
+        if (lecturer.is_superuser): return redirect(reverse('attendance:lecturer_login'))
+
+        if (request.method == 'POST'):
+            logout(request)
+            print("[Logging Out Called]")
+            return redirect(reverse('attendance:lecturer_login'))
+
+    except Exception as error:
+        print("[Error On LogOut]: ", error)
+        return HttpResponseServerError()
+
+
 
 def lecturer_login(request):
     
@@ -110,6 +129,7 @@ def lecturer_login(request):
 @login_required(login_url=('/lecturer/login/'))
 def dashboard(request):
     global LIVE_ATTENDANCE_ID
+
 
     user = request.user  # This will return current authenticated user (since this is a auth protected route).
     lecturer = User.objects.get(id=user.id) # Can't throw.

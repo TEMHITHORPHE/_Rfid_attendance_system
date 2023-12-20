@@ -25,5 +25,6 @@ urlpatterns = [
     path('retrieve/rfid/', views.retrieve_rfid, name='retrieve_rfid'),  # Used during student enrolling (Ajax Calls)
     path('retrieve/live/attendance/<int:skip_count>', views.retrieve_live_attendance, name='retrieve_live_attendance'), # (Ajax Calls)
     path('lecturer/login/', views.lecturer_login, name='lecturer_login'),
+    path('lecturer/logout/', views.lecturer_logout, name='lecturer_logout'),
     path('lecturer/attendance/live/', views.live_attendance, name='live_attendance')
 ]
