@@ -38,12 +38,6 @@
                 </thead>
                 <tbody id="attendance-table-body">
                     <!-- # {'live_attendance': True, 'attendance_id': 33, 'status': 'lecture', 'course_title': Information Systems, 'course_code': CIT513} -->
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Test</td>
-                        <td>m1623394</td>
-                    </tr>
                     {% for student in attendance %}
                     <tr>
                         <th scope="row">{{ forloop.counter|add:1 }}</th>
@@ -95,7 +89,7 @@
         setInterval(fetchLatestRecords, 5000);
 
         async function fetchLatestRecords() {
-            const row_count = tbody.childElementCount - 1;
+            const row_count = tbody.childElementCount;
 
             const res = await (await fetch('/retrieve/live/attendance/' + row_count, {
                 method: 'POST',
@@ -121,7 +115,7 @@
                 const student = attendanceList[index];
                 const trow = `
                         <tr>
-                            <th scope="row">${row_count + index + 1} </th>
+                            <th scope="row">${row_count + index} </th>
                             <td>Mark ${student.first_name} </td>
                             <td>Test  ${student.last_name} </td>
                             <td> ${student.student_id} </td>
