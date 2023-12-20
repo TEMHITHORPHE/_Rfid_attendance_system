@@ -43,14 +43,14 @@
                 <label style="display: block;" for="fingerprint_id">Fingerprint ID</label>
                 <input style="width: 20%; display: inline-block;" type="text" class="form-control" id="fingerprint_id"
                     name="fingerprint_id" required readonly>
-                <button type="menu" class="btn btn-primary px-0" style="width: 150px;" onclick="retrieveFingerPrint()">Get Fingerprint ID</button>
+                <button type="button" class="btn btn-primary px-0" style="width: 150px;" onclick="retrieveFingerPrint()">Get Fingerprint ID</button>
             </div>
 
             <div class="form-group">
                 <label style="display: block;" for="rfid_id">RFID ID</label>
                 <input style="width: 20%; display: inline-block;" type="text" class="form-control" id="rfid_id"
                     name="rfid_id" required readonly>
-                <button type="menu" class="btn btn-primary px-0" style="width: 150px;" onclick="retrieveRFID()">Get Rfid</button>
+                <button type="button" class="btn btn-primary px-0" style="width: 150px;" onclick="retrieveRFID()">Get Rfid</button>
             </div>
 
             <button type="submit" class="btn btn-primary">Enroll</button>
@@ -100,7 +100,7 @@
         const randomHex = (_length) => Array.from({ length: _length }, () => "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16))).join('');
 
         function retrieveFingerPrint() {
-            setTimeout(() => document.getElementById('fingerprint_id').value = randomHex(8), 3000);
+            setTimeout(() => document.getElementById('fingerprint_id').value = randomHex(8), 1500);
             // document.getElementById('fingerprint_id').value = randomHex(8);
         }
 
