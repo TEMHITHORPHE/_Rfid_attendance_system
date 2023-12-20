@@ -129,7 +129,7 @@ def lecturer_login(request):
 @login_required(login_url=('/lecturer/login/'))
 def dashboard(request):
     global LIVE_ATTENDANCE_ID
-
+    global RFID_TAG_SUBMISSION_MODE
 
     user = request.user  # This will return current authenticated user (since this is a auth protected route).
     lecturer = User.objects.get(id=user.id) # Can't throw.
@@ -194,9 +194,10 @@ def dashboard(request):
             attendance_config.config = config_data;
             attendance_config.save(force_update=True)
 
-            LIVE_ATTENDANCE_ID = config_data['attendance_id'];  # Set Global variable for Arduino use.
+            LIVE_ATTENDANCE_ID = config_data['attendance_id'];  # Set Global variable for Arduino use. 
+            RFID_TAG_SUBMISSION_MODE = 'A'
         
-            redirect(reverse('attendance:live_attendance'))
+            return redirect(reverse('attendance:live_attendance'))
         except Exception as error:
             print("[ERROR CREATING ATTENDANCE ======>> ]: ", error)
             HttpResponseServerError(content=error);
