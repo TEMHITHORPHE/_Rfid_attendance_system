@@ -1,0 +1,159 @@
+div.home {
+    min-height: 100vh;
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--tw-color-gray-100) / var(--tw-bg-opacity));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-left: var(--tw-size-4);
+    padding-right: var(--tw-size-4);
+  }
+  
+  @media (min-width: 640px) {
+    div.home {
+      padding-left: var(--tw-size-6);
+      padding-right: var(--tw-size-6);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    div.home {
+      padding-left: var(--tw-size-8);
+      padding-right: var(--tw-size-8);
+    }
+  }
+  
+  div.home > nav {
+    width: 100%;
+    max-width: var(--tw-screen-lg);
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    padding: var(--tw-size-6);
+  }
+  
+  div.home > nav > a {
+    font-size: var(--tw-font-size-2xl);
+    line-height: var(--tw-line-height-8);
+    font-weight: var(--tw-font-weight-bold);
+    --tw-text-opacity: 1;
+    color: rgb(var(--tw-color-gray-900) / var(--tw-text-opacity));
+  }
+  
+  div.home > nav > div {
+    display: flex;
+  }
+  
+  div.home > nav > div > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(var(--tw-size-4) * var(--tw-space-x-reverse));
+    margin-left: calc(var(--tw-size-4) * calc(1 - var(--tw-space-x-reverse)));
+  }
+  
+  div.home > nav > div > a {
+    --tw-text-opacity: 1;
+    color: rgb(var(--tw-color-gray-600) / var(--tw-text-opacity));
+  }
+  
+  div.home > nav > div > a:hover {
+    --tw-text-opacity: 1;
+    color: rgb(var(--tw-color-gray-900) / var(--tw-text-opacity));
+  }
+  
+  div.home > div {
+    max-width: var(--tw-width-md);
+    width: 100%;
+  }
+  
+  div.home > div > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(var(--tw-size-8) * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(var(--tw-size-8) * var(--tw-space-y-reverse));
+  }
+  
+  div.home > div > div > h2 {
+    margin-top: var(--tw-size-6);
+    text-align: center;
+    font-size: var(--tw-font-size-3xl);
+    line-height: var(--tw-line-height-9);
+    font-weight: var(--tw-font-weight-extrabold);
+    --tw-text-opacity: 1;
+    color: rgb(var(--tw-color-gray-900) / var(--tw-text-opacity));
+  }
+  
+  div.home > div > div.home__unique2 {
+    margin-top: var(--tw-size-8);
+  }
+  
+  div.home > div > div.home__unique2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(var(--tw-size-6) * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(var(--tw-size-6) * var(--tw-space-y-reverse));
+  }
+  
+  div.home > div > div > div {
+    border-radius: var(--tw-border-radius-md);
+    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+  
+  div.home > div > div > div > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(
+      calc(var(--tw-size-px) * -1) * calc(1 - var(--tw-space-y-reverse))
+    );
+    margin-bottom: calc(calc(var(--tw-size-px) * -1) * var(--tw-space-y-reverse));
+  }
+  
+  div.home > div > div > div > div > h3 {
+    font-size: var(--tw-font-size-lg);
+    line-height: var(--tw-line-height-7);
+    line-height: var(--tw-line-height-6);
+    font-weight: var(--tw-font-weight-medium);
+    --tw-text-opacity: 1;
+    color: rgb(var(--tw-color-gray-900) / var(--tw-text-opacity));
+  }
+  
+  div.home > div > div > div > div > p {
+    margin-top: var(--tw-size-2);
+    font-size: var(--tw-font-size-sm);
+    line-height: var(--tw-line-height-5);
+    --tw-text-opacity: 1;
+    color: rgb(var(--tw-color-gray-600) / var(--tw-text-opacity));
+  }
+  
+  div.home > div > div > div > div > button.home__unique5 {
+    margin-top: var(--tw-size-3);
+    width: 100%;
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--tw-color-blue-600) / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(var(--tw-color-white) / var(--tw-text-opacity));
+    padding-top: var(--tw-size-2);
+    padding-bottom: var(--tw-size-2);
+    padding-left: var(--tw-size-4);
+    padding-right: var(--tw-size-4);
+    border-radius: var(--tw-border-radius-default);
+  }
+  
+  div.home > div > div > div > div.home__unique4 {
+    margin-top: var(--tw-size-10);
+  }
+  
+  div.home > div > div > div > div > button.home__unique6 {
+    margin-top: var(--tw-size-3);
+    width: 100%;
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--tw-color-green-600) / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(var(--tw-color-white) / var(--tw-text-opacity));
+    padding-top: var(--tw-size-2);
+    padding-bottom: var(--tw-size-2);
+    padding-left: var(--tw-size-4);
+    padding-right: var(--tw-size-4);
+    border-radius: var(--tw-border-radius-default);
+  }
