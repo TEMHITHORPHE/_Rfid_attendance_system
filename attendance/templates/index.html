@@ -10,25 +10,29 @@
 
 </head>
 
-<body>
+<body style="background-color: #eaeaea;">
     {% include "navbar.html" %}
 
-    <div class="container mt-5">
-        <h1>Welcome to the RFID & Biometric Attendance System</h1>
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <h3>Enroll as a Student</h3>
-                <p>Provide your personal information, fingerprint, and RFID details.</p>
-                <a href="{% url 'attendance:enroll_student' %}" class="btn btn-primary">Enroll Now</a>
+    <center>
+    </center>
+    <h1 class="text-center mx-auto mt-5" style="width: 40%; font-size: 30px; font-weight: 800; line-height: 36px;">Welcome to the RFID & Biometric Attendance System</h1>
+    <div class="container mt-5 w-50">
+        <div class="row mt-5">
+            <div class="col text-left shadow-lg p-3 mx-2 mb-5 bg-white rounded">
+                <h3>Enroll Student</h3>
+                <p class="text-secondary"> Take student personal information, fingerprint, and RFID details.</p>
+                <a href="{% url 'attendance:enroll_student' %}" class="btn btn-primary w-100">Enroll Now</a>
             </div>
-            <div class="col-md-6">
+            <div class="col text-left shadow-lg p-3 mx-2 mb-5 bg-white rounded-lg">
                 <h3>Log In</h3>
-                <p>Already enrolled? Log in to mark your attendance.</p>
-                <a href="{% url 'attendance:lecturer_login' %}" class="btn btn-success">Log In</a>
+                <p class="text-secondary">Already enrolled? Log in to take student attendance.</p>
+                <a href="{% url 'attendance:lecturer_login' %}" class="btn btn-success w-100">Log In</a>
             </div>
         </div>
+        <div class="row mt-4">
+        </div>
     </div>
-
+    <!-- <div class="shadow-lg p-3 mb-5 bg-white rounded">Larger shadow</div> -->
 
     {% include "footer.html" %}
 
