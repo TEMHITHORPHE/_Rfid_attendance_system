@@ -100,7 +100,8 @@
         const randomHex = (_length) => Array.from({ length: _length }, () => "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16))).join('');
 
         function retrieveFingerPrint() {
-            document.getElementById('fingerprint_id').value = randomHex(8);
+            setTimeout(() => document.getElementById('fingerprint_id').value = randomHex(8), 3000);
+            // document.getElementById('fingerprint_id').value = randomHex(8);
         }
 
         async function retrieveRFID() {
