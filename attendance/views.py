@@ -27,6 +27,7 @@ RFID_TAG_SUBMISSION_MODE = 'E'
 # A hack to get around arduino not knowing anything about the logged in lecturer.
 LIVE_ATTENDANCE_ID = None
 
+print("[RFID_TAG_SUBMISSION_MODE]: ", RFID_TAG_SUBMISSION_MODE)
 
 @csrf_exempt
 def index(request):
@@ -37,6 +38,7 @@ def index(request):
 # Called By Arduino
 def rfid_submission_mode(request, access_code):
     print("[[[[[[[ CONFIG MODE REQUEST ]]]]]]]]]")
+    print(RFID_TAG_SUBMISSION_MODE)
     if (request.method == 'GET' and access_code == ACCESS_CODE ):
         return HttpResponse(content=RFID_TAG_SUBMISSION_MODE);
     return HttpResponseNotAllowed(['GET'])
@@ -70,16 +72,44 @@ def retrieve_rfid(request):
 
 
 
+# def enroll_student(request):
+#     print("[ENROLL]: ", request.user)
+    
+#     global RFID_TAG_SUBMISSION_MODE
+#     RFID_TAG_SUBMISSION_MODE = 'E'
+
+#     if (request.method == 'POST'):
+#         form = StudentForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             print("SUCCESS", request.POST)
+#             return render(request, 'enroll.html', {'student': { 'enrolled': True, 'name': request.POST['first_name'] } })
+#         print("FAILED,", request.POST)
+#         return render(request, 'enroll.html', {'student': { 'enrolled': False } })
+#     else:
+#         form = StudentForm()
+#     return render(request, 'enroll.html', {'form': form})
+    
+
 def enroll_student(request):
-    if request.method == 'POST':
+    print("[ENROLL]: ", request.user)
+
+    global RFID_TAG_SUBMISSION_MODE
+    RFID_TAG_SUBMISSION_MODE = 'E'
+
+    if (request.method == 'POST' and request.user):
         form = StudentForm(request.POST)
         if form.is_valid():
             form.save()
+            print("SUCCESS", request.POST)
             return render(request, 'enroll.html', {'student': { 'enrolled': True, 'name': request.POST['first_name'] } })
+        print("FAILED,", request.POST)
         return render(request, 'enroll.html', {'student': { 'enrolled': False } })
+    elif(request.method == 'POST'):
+        return render(request, 'enroll.html', {'lecturer': False })
     else:
-        form = StudentForm()
-    return render(request, 'enroll.html', {'form': form})
+        return render(request, 'enroll.html')
+
 
 
 @csrf_exempt
@@ -196,6 +226,7 @@ def dashboard(request):
 
             LIVE_ATTENDANCE_ID = config_data['attendance_id'];  # Set Global variable for Arduino use. 
             RFID_TAG_SUBMISSION_MODE = 'A'
+            print("swic", RFID_TAG_SUBMISSION_MODE)
         
             return redirect(reverse('attendance:live_attendance'))
         except Exception as error:
@@ -211,6 +242,7 @@ def dashboard(request):
 @login_required(login_url='lecturer_login')
 def live_attendance(request):
     global LIVE_ATTENDANCE_ID
+    global RFID_TAG_SUBMISSION_MODE
 
     user = request.user  # This will return current authenticated user (since this is a auth protected route).
     lecturer = User.objects.get(id=user.id) # Can't throw.
@@ -220,12 +252,19 @@ def live_attendance(request):
     if (request.method == 'GET'):
 
         # Retrieve AttendanceConfig for the lecturer
-        attendance_config, created = AttendanceConfig.objects.get_or_create(lecturer=lecturer,  defaults=ATTENDANCE_CONFIG_DEFAULT )
+        attendance_config, created = AttendanceConfig.objects.get_or_create(lecturer=lecturer,  defaults=ATTENDANCE_CONFIG_DEFAULT)
         # {'live_attendance': True, 'attendance_id': 33, 'status': 'lecture', 'course_title': Information Systems, 'course_code': CIT513}
 
         # Retrieve current Attendance based on the live attendance id gotten from AttendanceConfig.
         ongoing_attendance = Attendance.objects.get(lecturer=lecturer, id=attendance_config.config['attendance_id']).student.all()
         print("[Live Attendance]: ", ongoing_attendance )
+
+        if (attendance_config.config['live_attendance']):
+            RFID_TAG_SUBMISSION_MODE = 'A'
+            LIVE_ATTENDANCE_ID = attendance_config.config['attendance_id']
+        else:
+            RFID_TAG_SUBMISSION_MODE = 'E'
+            LIVE_ATTENDANCE_ID = None
 
         return render(request, 'live_attendance.html', {'config': attendance_config.config, 'attendance': ongoing_attendance})
     
@@ -253,6 +292,8 @@ def live_attendance(request):
             empty_attendances.delete() if empty_attendances.count() > 0 else "";
             print("[DELETED]: ", empty_attendances.count())
 
+            RFID_TAG_SUBMISSION_MODE = 'E'
+
             return redirect(reverse('attendance:dashboard'))
         
         except Exception as error:
@@ -266,7 +307,7 @@ def live_attendance(request):
 def mark_attendance(request, access_code, tag_id):
 
     if (request.method == 'GET'):
-        print("[Marking Attendance]: ", tag_id)
+        print("[Marking Attendance]: ", LIVE_ATTENDANCE_ID)
         if (access_code != ACCESS_CODE): return JsonResponse({'status': 'error', 'msg': 'Invalid Acess Code!'})
         if (LIVE_ATTENDANCE_ID == None): return JsonResponse({'status': 'error', 'msg': 'No Live Attendance In Session!!!!'})
 
@@ -276,6 +317,7 @@ def mark_attendance(request, access_code, tag_id):
             attendance.student.add(student) # Add student to attendance list.
             attendance.save();
 
+            print("[Attendance Marked]: ", tag_id)
             return JsonResponse({
                 'status': 'success',
                 'msg': 'Attendance Recorded!'
@@ -296,10 +338,23 @@ def mark_attendance(request, access_code, tag_id):
 
 
 # Ajax Calls Only
-@login_required(login_url='lecturer_login')
 @csrf_exempt
+@login_required(login_url='lecturer_login')
 def retrieve_live_attendance(request, skip_count):
-    print(LIVE_ATTENDANCE_ID, skip_count)
+    print(LIVE_ATTENDANCE_ID, RFID_TAG_SUBMISSION_MODE, skip_count)
+
+    # global RFID_TAG_SUBMISSION_MODE
+    
+    # user = request.user  # This will return current authenticated user (since this is a auth protected route).
+    # lecturer = User.objects.get(id=user.id) # Can't throw.
+
+    # # Retrieve AttendanceConfig for the lecturer
+    # attendance_config, created = AttendanceConfig.objects.get_or_create(lecturer=lecturer,  defaults=ATTENDANCE_CONFIG_DEFAULT)
+
+    # if (attendance_config.config['live_attendance']):
+    #     RFID_TAG_SUBMISSION_MODE = 'A'
+
+
     try:
         if (request.method == 'POST'):
             attendance = Attendance.objects.get(id=LIVE_ATTENDANCE_ID)

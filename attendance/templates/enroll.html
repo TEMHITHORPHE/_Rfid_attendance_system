@@ -43,14 +43,16 @@
                 <label style="display: block;" for="fingerprint_id">Fingerprint ID</label>
                 <input style="width: 20%; display: inline-block;" type="text" class="form-control" id="fingerprint_id"
                     name="fingerprint_id" required readonly>
-                <button type="button" class="btn btn-primary px-0" style="width: 150px;" onclick="retrieveFingerPrint()">Get Fingerprint ID</button>
+                <button type="button" class="btn btn-primary px-0" style="width: 150px;"
+                    onclick="retrieveFingerPrint()">Get Fingerprint ID</button>
             </div>
 
             <div class="form-group">
                 <label style="display: block;" for="rfid_id">RFID ID</label>
                 <input style="width: 20%; display: inline-block;" type="text" class="form-control" id="rfid_id"
                     name="rfid_id" required readonly>
-                <button type="button" class="btn btn-primary px-0" style="width: 150px;" onclick="retrieveRFID()">Get Rfid</button>
+                <button type="button" class="btn btn-primary px-0" style="width: 150px;" onclick="retrieveRFID()">Get
+                    Rfid</button>
             </div>
 
             <button type="submit" class="btn btn-primary">Enroll</button>
@@ -69,6 +71,16 @@
 
 
     <!-- Notification Prompts Below  -->
+    {% if lecturer == False %}
+    <div id="" style="position: fixed; top: 100px; right: 1%;"
+        class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Oh! snap! ... You are not a Lecturer ... denied!</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="dismissError()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
 
     {% if student.enrolled %}
 
