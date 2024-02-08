@@ -39,7 +39,6 @@ def index(request):
 def rfid_submission_mode(request, access_code):
     print("[[[[[[[ CONFIG MODE REQUEST ]]]]]]]]]")
     print(RFID_TAG_SUBMISSION_MODE)
-    print(RFID_TAG_SUBMISSION_MODE)
     if (request.method == 'GET' and access_code == ACCESS_CODE ):
         return HttpResponse(content=RFID_TAG_SUBMISSION_MODE);
     return HttpResponseNotAllowed(['GET'])
@@ -136,7 +135,6 @@ def enroll_student(request):
     else:
         print("[ON - ENROLL - PAGE]: ", request.user)
         return render(request, 'enroll.html')
-
 
 
 @csrf_exempt
@@ -270,7 +268,6 @@ def dashboard(request):
 def live_attendance(request):
     global LIVE_ATTENDANCE_ID
     global RFID_TAG_SUBMISSION_MODE
-    global RFID_TAG_SUBMISSION_MODE
 
     user = request.user  # This will return current authenticated user (since this is a auth protected route).
     lecturer = User.objects.get(id=user.id) # Can't throw.
@@ -287,13 +284,6 @@ def live_attendance(request):
         # Retrieve current Attendance based on the live attendance id gotten from AttendanceConfig.
         ongoing_attendance = Attendance.objects.get(lecturer=lecturer, id=attendance_config.config['attendance_id']).student.all()
         print("[Live Attendance]: ", ongoing_attendance )
-
-        if (attendance_config.config['live_attendance']):
-            RFID_TAG_SUBMISSION_MODE = 'A'
-            LIVE_ATTENDANCE_ID = attendance_config.config['attendance_id']
-        else:
-            RFID_TAG_SUBMISSION_MODE = 'E'
-            LIVE_ATTENDANCE_ID = None
 
         if (attendance_config.config['live_attendance']):
             RFID_TAG_SUBMISSION_MODE = 'A'
@@ -327,8 +317,6 @@ def live_attendance(request):
             empty_attendances = Attendance.objects.filter(student__isnull=True)   # (Ideally, should be a non regular cron job).
             empty_attendances.delete() if empty_attendances.count() > 0 else "";
             print("[DELETED]: ", empty_attendances.count())
-
-            RFID_TAG_SUBMISSION_MODE = 'E'
 
             RFID_TAG_SUBMISSION_MODE = 'E'
 
