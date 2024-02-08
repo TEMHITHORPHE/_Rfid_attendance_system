@@ -39,6 +39,7 @@ def index(request):
 def rfid_submission_mode(request, access_code):
     print("[[[[[[[ CONFIG MODE REQUEST ]]]]]]]]]")
     print(RFID_TAG_SUBMISSION_MODE)
+    print(RFID_TAG_SUBMISSION_MODE)
     if (request.method == 'GET' and access_code == ACCESS_CODE ):
         return HttpResponse(content=RFID_TAG_SUBMISSION_MODE);
     return HttpResponseNotAllowed(['GET'])
@@ -91,13 +92,36 @@ def retrieve_rfid(request):
 #     return render(request, 'enroll.html', {'form': form})
     
 
+
+# def enroll_student(request):
+#     print("[ENROLL]: ", request.user)
+    
+#     global RFID_TAG_SUBMISSION_MODE
+#     RFID_TAG_SUBMISSION_MODE = 'E'
+
+#     if (request.method == 'POST'):
+#         form = StudentForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             print("SUCCESS", request.POST)
+#             return render(request, 'enroll.html', {'student': { 'enrolled': True, 'name': request.POST['first_name'] } })
+#         print("FAILED,", request.POST)
+#         return render(request, 'enroll.html', {'student': { 'enrolled': False } })
+#     else:
+#         form = StudentForm()
+#     return render(request, 'enroll.html', {'form': form})
+    
+
 def enroll_student(request):
     print("[ENROLL]: ", request.user)
 
     global RFID_TAG_SUBMISSION_MODE
     RFID_TAG_SUBMISSION_MODE = 'E'
 
-    if (request.method == 'POST' and request.user):
+    # print("[ENROLL]: ", request.user)
+
+    if ((request.method == 'POST' and request.user) and request.user):
+        print("[ENROLL-PAGE-SUBISSION]: ", request.user)
         form = StudentForm(request.POST)
         if form.is_valid():
             form.save()
@@ -107,7 +131,10 @@ def enroll_student(request):
         return render(request, 'enroll.html', {'student': { 'enrolled': False } })
     elif(request.method == 'POST'):
         return render(request, 'enroll.html', {'lecturer': False })
+    elif(request.method == 'POST'):
+        return render(request, 'enroll.html', {'lecturer': False })
     else:
+        print("[ON - ENROLL - PAGE]: ", request.user)
         return render(request, 'enroll.html')
 
 
@@ -243,6 +270,7 @@ def dashboard(request):
 def live_attendance(request):
     global LIVE_ATTENDANCE_ID
     global RFID_TAG_SUBMISSION_MODE
+    global RFID_TAG_SUBMISSION_MODE
 
     user = request.user  # This will return current authenticated user (since this is a auth protected route).
     lecturer = User.objects.get(id=user.id) # Can't throw.
@@ -253,11 +281,19 @@ def live_attendance(request):
 
         # Retrieve AttendanceConfig for the lecturer
         attendance_config, created = AttendanceConfig.objects.get_or_create(lecturer=lecturer,  defaults=ATTENDANCE_CONFIG_DEFAULT)
+        attendance_config, created = AttendanceConfig.objects.get_or_create(lecturer=lecturer,  defaults=ATTENDANCE_CONFIG_DEFAULT)
         # {'live_attendance': True, 'attendance_id': 33, 'status': 'lecture', 'course_title': Information Systems, 'course_code': CIT513}
 
         # Retrieve current Attendance based on the live attendance id gotten from AttendanceConfig.
         ongoing_attendance = Attendance.objects.get(lecturer=lecturer, id=attendance_config.config['attendance_id']).student.all()
         print("[Live Attendance]: ", ongoing_attendance )
+
+        if (attendance_config.config['live_attendance']):
+            RFID_TAG_SUBMISSION_MODE = 'A'
+            LIVE_ATTENDANCE_ID = attendance_config.config['attendance_id']
+        else:
+            RFID_TAG_SUBMISSION_MODE = 'E'
+            LIVE_ATTENDANCE_ID = None
 
         if (attendance_config.config['live_attendance']):
             RFID_TAG_SUBMISSION_MODE = 'A'
@@ -294,6 +330,8 @@ def live_attendance(request):
 
             RFID_TAG_SUBMISSION_MODE = 'E'
 
+            RFID_TAG_SUBMISSION_MODE = 'E'
+
             return redirect(reverse('attendance:dashboard'))
         
         except Exception as error:
@@ -307,7 +345,7 @@ def live_attendance(request):
 def mark_attendance(request, access_code, tag_id):
 
     if (request.method == 'GET'):
-        print("[Marking Attendance]: ", LIVE_ATTENDANCE_ID)
+        print("[Marking Attendance]: ", LIVE_ATTENDANCE_ID, tag_id)
         if (access_code != ACCESS_CODE): return JsonResponse({'status': 'error', 'msg': 'Invalid Acess Code!'})
         if (LIVE_ATTENDANCE_ID == None): return JsonResponse({'status': 'error', 'msg': 'No Live Attendance In Session!!!!'})
 
